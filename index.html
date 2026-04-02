@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>点亮人生 · 心灵九相原型测评</title>
+<style>
+  :root {
+    --navy: #1A3C6B;
+    --purple: #6B3FA0;
+    --gold: #B8860B;
+    --teal: #0E7490;
+    --green: #1A6B3C;
+    --red: #C0392B;
+    --light-bg: #F8F7FF;
+    --text: #222;
+    --subtext: #666;
+    --border: #E0E0E0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+    background: var(--light-bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Progress Bar ── */
+  .progress-bar-container {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: #E0E0E0;
+    z-index: 100;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--teal));
+    transition: width 0.4s ease;
+  }
+
+  /* ── Page wrapper ── */
+  .page {
+    display: none;
+    width: 100%;
+    max-width: 720px;
+    padding: 40px 24px 80px;
+    animation: fadeIn 0.35s ease;
+  }
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Cover ── */
+  .cover {
+    text-align: center;
+    padding-top: 60px;
+  }
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .logo-wrap svg {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    text-align: left;
+    line-height: 1.2;
+  }
+  .logo-text .org {
+    font-size: 20px;
+    font-weight: 800;
+    color: #D4610A;
+    letter-spacing: 1px;
+  }
+  .logo-text .tagline {
+    font-size: 11px;
+    color: var(--subtext);
+    letter-spacing: 2px;
+    margin-top: 2px;
+  }
+  .cover .brand {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--purple);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .cover h1 {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .cover .sub {
+    font-size: 18px;
+    color: var(--purple);
+    margin-bottom: 40px;
+  }
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--teal));
+    margin: 0 auto 40px;
+    border-radius: 2px;
+  }
+  .cover .desc {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--subtext);
+    max-width: 480px;
+    margin: 0 auto 48px;
+  }
+
+  .info-boxes {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 48px;
+  }
+  .info-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    min-width: 100px;
+  }
+  .info-box .num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--purple);
+    line-height: 1;
+  }
+  .info-box .label {
+    font-size: 12px;
+    color: var(--subtext);
+    margin-top: 4px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--purple), var(--navy));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 48px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(107,63,160,0.3);
+    transition: all 0.2s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(107,63,160,0.4);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .note {
+    font-size: 12px;
+    color: var(--subtext);
+    margin-top: 20px;
+  }
+
+  /* ── Question ── */
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .q-num {
+    background: linear-gradient(135deg, var(--purple), var(--navy));
+    color: white;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .q-meta {
+    font-size: 12px;
+    color: var(--subtext);
+    letter-spacing: 1px;
+  }
+  .q-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .q-desc {
+    font-size: 15px;
+    color: var(--subtext);
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 28px;
+    padding-left: 12px;
+    border-left: 3px solid var(--border);
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .option:hover {
+    border-color: var(--purple);
+    background: #FAF7FF;
+    transform: translateX(4px);
+  }
+  .option.selected {
+    border-color: var(--purple);
+    background: linear-gradient(135deg, #FAF7FF, #EDE7F6);
+    box-shadow: 0 2px 12px rgba(107,63,160,0.15);
+  }
+
+  .option-label {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--light-bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--subtext);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option.selected .option-label {
+    background: var(--purple);
+    border-color: var(--purple);
+    color: white;
+  }
+  .option-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+    flex: 1;
+    padding-top: 4px;
+  }
+
+  .q-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+  }
+  .btn-nav {
+    background: none;
+    border: 2px solid var(--border);
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-size: 14px;
+    color: var(--subtext);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-nav:hover {
+    border-color: var(--purple);
+    color: var(--purple);
+  }
+  .btn-nav.primary {
+    background: linear-gradient(135deg, var(--purple), var(--navy));
+    border-color: transparent;
+    color: white;
+    font-weight: 600;
+  }
+  .btn-nav.primary:hover {
+    color: white;
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  .btn-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  /* ── Loading / Calculating ── */
+  .calculating {
+    text-align: center;
+    padding-top: 120px;
+  }
+  .spinner {
+    width: 60px; height: 60px;
+    border: 5px solid var(--border);
+    border-top-color: var(--purple);
+    border-radius: 50%;
+    margin: 0 auto 32px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Result ── */
+  .result-header {
+    text-align: center;
+    padding: 40px 0 32px;
+  }
+  .result-badge {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: white;
+    background: linear-gradient(135deg, var(--purple), var(--navy));
+    padding: 6px 20px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+  }
+
+  .archetype-card {
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 20px;
+    border: 2px solid;
+    position: relative;
+    overflow: hidden;
+  }
+  .archetype-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    opacity: 0.08;
+    background: currentColor;
+  }
+
+  .archetype-name {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .archetype-sub {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .archetype-tag {
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 12px;
+    border-radius: 50px;
+    border: 1px solid currentColor;
+    opacity: 0.7;
+    margin-bottom: 24px;
+  }
+
+  .profile-section {
+    margin-bottom: 20px;
+  }
+  .profile-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+  .profile-text {
+    font-size: 15px;
+    line-height: 1.8;
+    opacity: 0.9;
+  }
+
+  .quote-block {
+    border-top: 1px solid currentColor;
+    padding-top: 20px;
+    margin-top: 24px;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.7;
+    opacity: 0.85;
+    text-align: center;
+  }
+
+  /* Secondary archetype */
+  .secondary-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .secondary-card .label {
+    font-size: 12px;
+    color: var(--subtext);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .secondary-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .secondary-desc {
+    font-size: 14px;
+    color: var(--subtext);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* Scores chart */
+  .scores-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+  .scores-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .score-name {
+    font-size: 13px;
+    width: 60px;
+    flex-shrink: 0;
+    color: var(--text);
+  }
+  .score-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: var(--light-bg);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+  }
+  .score-count {
+    font-size: 13px;
+    font-weight: 700;
+    width: 20px;
+    text-align: right;
+    color: var(--subtext);
+  }
+
+  /* Combination */
+  .combo-card {
+    background: linear-gradient(135deg, #FAF7FF, #EDE7F6);
+    border: 1px solid #D8C8F0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .combo-title {
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--purple);
+    margin-bottom: 8px;
+  }
+  .combo-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .combo-desc {
+    font-size: 14px;
+    color: var(--subtext);
+    line-height: 1.7;
+  }
+
+  /* Restart */
+  .result-footer {
+    text-align: center;
+    padding: 24px 0 48px;
+  }
+  .btn-restart {
+    background: none;
+    border: 2px solid var(--border);
+    border-radius: 50px;
+    padding: 12px 32px;
+    font-size: 14px;
+    color: var(--subtext);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-restart:hover {
+    border-color: var(--purple);
+    color: var(--purple);
+  }
+
+  /* mobile */
+  @media (max-width: 480px) {
+    .cover h1 { font-size: 38px; }
+    .info-boxes { flex-wrap: wrap; }
+    .q-title { font-size: 18px; }
+    .page { padding: 28px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar-container">
+  <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<!-- ══ COVER ══════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-cover">
+  <div class="cover">
+    <!-- 点亮人生 logo + 团队名 -->
+    <div class="logo-wrap">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="petalG" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FF6B00"/>
+            <stop offset="100%" stop-color="#FFB300"/>
+          </radialGradient>
+          <radialGradient id="flameG" cx="50%" cy="70%" r="55%">
+            <stop offset="0%" stop-color="#FF2200"/>
+            <stop offset="100%" stop-color="#FF6600"/>
+          </radialGradient>
+        </defs>
+        <!-- radiating petals (12 petals) -->
+        <g transform="translate(50,50)">
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(0) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(30) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(60) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(90) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(120) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(150) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(180) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(210) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(240) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(270) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(300) translate(0,-28)"/>
+          <ellipse rx="6" ry="18" fill="url(#petalG)" transform="rotate(330) translate(0,-28)"/>
+        </g>
+        <!-- candle body -->
+        <rect x="44" y="52" width="12" height="26" rx="3" fill="url(#petalG)"/>
+        <!-- wax drips -->
+        <ellipse cx="48" cy="78" rx="3" ry="5" fill="#FF4400" opacity="0.85"/>
+        <ellipse cx="54" cy="75" rx="2.5" ry="4" fill="#FF4400" opacity="0.75"/>
+        <!-- flame -->
+        <path d="M50 52 C47 46 44 41 50 35 C56 41 53 46 50 52Z" fill="url(#flameG)"/>
+        <path d="M50 50 C48 46 47 43 50 39 C53 43 52 46 50 50Z" fill="#FF2200" opacity="0.6"/>
+      </svg>
+      <div class="logo-text">
+        <div class="org">点亮人生</div>
+        <div class="tagline">Soul Nine Archetypes</div>
+      </div>
+    </div>
+
+    <div class="brand">心灵九相 · 原型测评</div>
+    <h1>你是哪种原型？</h1>
+    <div class="sub">发现你的心理底色</div>
+    <div class="divider"></div>
+    <p class="desc">这是一份基于荣格原型理论的自我探索工具。<br>18道日常情境题，帮你发现自己的"自动反应模式"。<br>没有对错之分，跟着第一直觉走。</p>
+
+    <div class="info-boxes">
+      <div class="info-box">
+        <div class="num">18</div>
+        <div class="label">情境问题</div>
+      </div>
+      <div class="info-box">
+        <div class="num">9</div>
+        <div class="label">心理原型</div>
+      </div>
+      <div class="info-box">
+        <div class="num">10'</div>
+        <div class="label">约需时间</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startQuiz()">开始测评 →</button>
+    <p class="note">请用你最真实的第一反应作答</p>
+    <div style="margin-top:40px;padding:16px;border-top:1px solid #eee;text-align:center">
+      <p style="font-size:11px;color:#999;margin-bottom:4px">© 2026 点亮人生 · 心灵九相系统</p>
+      <p style="font-size:10px;color:#bbb">本测评内容及系统设计版权归「点亮人生」所有</p>
+      <p style="font-size:10px;color:#bbb">未经授权，禁止复制、转载、修改或用于商业用途，违者必究</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QUESTION ════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-question">
+  <div class="q-header">
+    <div class="q-num" id="qNum">1</div>
+    <div class="q-meta" id="qMeta">第 1 题，共 18 题</div>
+  </div>
+
+  <div class="q-title" id="qTitle"></div>
+  <div class="q-desc" id="qDesc"></div>
+
+  <div class="options" id="optionsContainer"></div>
+
+  <div class="q-nav">
+    <button class="btn-nav" id="btnPrev" onclick="prevQ()">← 上一题</button>
+    <button class="btn-nav primary" id="btnNext" onclick="nextQ()" disabled>下一题 →</button>
+  </div>
+</div>
+
+<!-- ══ CALCULATING ═════════════════════════════════════════════════════════ -->
+<div class="page" id="page-calculating">
+  <div class="calculating">
+    <div class="spinner"></div>
+    <div style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:12px">正在解析你的心理底色…</div>
+    <div style="font-size:14px;color:var(--subtext)">荣格原型系统计算中</div>
+  </div>
+</div>
+
+<!-- ══ RESULT ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-result">
+  <!-- filled by JS -->
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════════════════
+
+const ARCHETYPES = {
+  wall:     { name: '筑墙人', sub: 'The Wall Builder', tag: '边界守护', color: '#3F51B5', bg: '#E8EAF6' },
+  hiker:    { name: '远足者', sub: 'The Hiker',        tag: '自由探索', color: '#388E3C', bg: '#E8F5E9' },
+  chall:    { name: '较真者', sub: 'The Challenger',   tag: '直面真相', color: '#E64A19', bg: '#FBE9E7' },
+  analyst:  { name: '解析者', sub: 'The Analyst',      tag: '理性洞察', color: '#1976D2', bg: '#E3F2FD' },
+  warmer:   { name: '暖场人', sub: 'The Warmer',       tag: '连接温暖', color: '#F57C00', bg: '#FFF3E0' },
+  creator:  { name: '造物者', sub: 'The Creator',      tag: '创造转化', color: '#7B1FA2', bg: '#F3E5F5' },
+  disrupt:  { name: '搅局者', sub: 'The Disruptor',    tag: '打破常规', color: '#C2185B', bg: '#FCE4EC' },
+  helm:     { name: '掌舵人', sub: 'The Helmsman',     tag: '引领方向', color: '#5D4037', bg: '#EFEBE9' },
+  observer: { name: '旁观者', sub: 'The Observer',     tag: '深度观察', color: '#455A64', bg: '#ECEFF1' },
+};
+
+const PROFILES = {
+  wall: {
+    pattern: '当外界的刺激接近你的内核时，你的第一反应是建起一道墙。你倾向于通过控制距离来保护自己——不是不在乎，而是太在乎了所以需要一层屏障。你的边界感很强，但有时也会让重要的人被挡在墙外。',
+    strength: '你拥有极强的自我保护能力和清晰的边界意识。你知道什么该接受、什么该拒绝，是朋友圈里"最清醒的那个人"。',
+    shadow: '你可能会在关系中过早设防。久而久之，你可能感到安全却孤独——被保护了却也被隔离了。',
+    relationship: '你是"难追但值得追"的类型。一旦信任建立，你其实是非常忠诚和深情的。你最怕的是被辜负后发现自己的墙白拆了。',
+    growth: '试着在安全的关系中练习"不完美的敞开"。允许自己被看见，不代表失去控制。真正的安全感，来自"即使脆弱也不会被伤害"的经验。',
+    quote: '"保护自己的最高境界，不是让谁都进不来，而是让对的人不需要翻墙。"',
+  },
+  hiker: {
+    pattern: '当情境变得沉重或令人窒息时，你的内在系统会自动切换到"远足模式"。你渴望移动、转换、离开。这不是逃跑，更像是你的心理呼吸方式。',
+    strength: '你拥有惊人的适应力和探索精神。你的灵活性让你在变化中如鱼得水，是朋友们的"氧气供给"——和你在一起总感觉不会太闷。',
+    shadow: '你可能在问题真正被解决之前就已经移步了。有些成长需要"留在原地"的勇气——正是你最不擅长的。',
+    relationship: '你是"不会让人无聊"的类型，但伴侣可能会困惑——你是在享受自由，还是在回避亲密？',
+    growth: '下次想走的时候，多停留五分钟，问自己："我是在走向什么，还是在逃离什么？"有时候，最远的旅程是往内走。',
+    quote: '"真正的自由不是随时能走，而是随时能走却选择留下。"',
+  },
+  chall: {
+    pattern: '你对虚假和模糊有一种近乎本能的不适。你追求的不是冲突，而是真相——但真相有时穿着冲突的外衣。当别人在绕弯子时，你的内心已经在说"能不能直接一点"。',
+    strength: '你是人群中少有的"敢说真话"的人。你有勇气面对别人回避的问题，也有能力在关键时刻打破僵局。',
+    shadow: '你的"较真"有时会让别人感到被攻击。你可能低估了人们需要"安全感"才能面对真相这件事。',
+    relationship: '和你在一起不用戴面具，但也无处藏身。你吸引同样勇敢的人，但也可能吓走还没准备好的人。',
+    growth: '试着区分"需要被说的真相"和"需要被说的时机"。学会在说出真话之前先铺一层温暖，不是虚伪——是智慧。',
+    quote: '"温柔不是真相的敌人，是真相最好的信使。"',
+  },
+  analyst: {
+    pattern: '面对混乱、情绪和冲突，你的第一反应是启动"分析模式"——退后一步，用理性的框架来理解正在发生的一切。你能在别人还在感受的时候就完成归因和推演。',
+    strength: '你拥有卓越的洞察力和全局视角。你是团队里的"最强大脑"，朋友圈里的"人生顾问"。',
+    shadow: '你可能用"理解"代替了"感受"。过度的理性化可能是一种高级防御——让你永远在安全的观察者位置，而不用真正进入情感的战场。',
+    relationship: '你提供的是"稳定和理解"，但伴侣可能渴望的是"我不需要你理解我，我需要你抱抱我"。',
+    growth: '下次想分析的时候，试着先停在感受里30秒。不是所有的情绪都需要被理解，有些只需要被允许存在。',
+    quote: '"最深刻的理解，不是看透了别人，而是允许自己不必看透一切。"',
+  },
+  warmer: {
+    pattern: '你的内在雷达永远在扫描周围人的状态——谁不舒服、谁被冷落、谁需要帮助。你是天然的"场域调节器"，总是在创造一个让所有人都OK的氛围。',
+    strength: '你拥有极高的情绪感知力和关系协调能力。你是每个群体里的"温度担当"，让人感到被看见和被接纳。',
+    shadow: '你的善意可能是一种精心包装的控制——通过让别人舒服来确保自己不会被拒绝。你可能已经很久没有问自己"我想要什么"了。',
+    relationship: '你是"最体贴的那个人"，但也可能是"最累的那个人"。允许自己被照顾，不是软弱——是给关系留出双向流动的空间。',
+    growth: '练习说"不"。下次想照顾别人之前，先问自己："如果我不做这件事，会发生什么？"世界不会因为你歇一歇就崩塌。',
+    quote: '"你照亮了所有人的房间，但别忘了，你也有权做一盏只为自己亮的灯。"',
+  },
+  creator: {
+    pattern: '当困境来临，你的反应不是逃跑或战斗，而是——"创造"。你能把混乱重新组装成有意义的东西，把别人眼中的废墟变成你的积木。',
+    strength: '你有一种近乎魔法的能力：把痛苦变成作品，把困境变成机会。你是人群中的"炼金术士"。',
+    shadow: '创造有时也是一种精致的逃避——把直面情绪的时间花在了"做东西"上。有些伤口不需要被改造成艺术品，只需要被看见。',
+    relationship: '你是"最有趣的那个人"，但伴侣偶尔会想："你能不能不解决问题，就只是陪我难过？"',
+    growth: '下次遇到问题想"动手做些什么"的时候，试着先什么都不做。有些东西在你停止打造的时候，反而自己开始生长了。',
+    quote: '"最伟大的创造，有时候是允许事物保持它原本的样子。"',
+  },
+  disrupt: {
+    pattern: '你有一种天然的"规则探测器"——你能瞬间感知到哪些规则是真的，哪些只是惯性的假设。当所有人都在按部就班时，你内心有个声音在说"为什么非要这样？"',
+    strength: '你是人群中的"真实检验官"。你的存在让僵化的系统被质疑，让被压抑的东西有机会浮出水面。',
+    shadow: '你可能把"打破"变成了一种习惯。有时候，你的测试行为在无意识中是在问："如果我捣乱了你还在，说明你真的在乎我。"',
+    relationship: '你是"最刺激的那个人"——永远不会平淡，但也让人精疲力尽。当你发现自己不再想搅局的时候——那可能是你第一次真正放松。',
+    growth: '下次想打破规则的时候，先问自己："我想创造什么？"从"反叛者"进化成"变革者"的距离，是一个清晰的意图。',
+    quote: '"真正的叛逆不是打碎一切，是在废墟上种出花来。"',
+  },
+  helm: {
+    pattern: '你的内在有一个强大的"方向感系统"——当局面混乱、众人迷茫时，你会自然地站出来，划定路线、分配资源、推动进程。',
+    strength: '你有天生的领导力和决断力。你是团队里的"定海神针"，是朋友圈里"关键时刻能靠得住的人"。',
+    shadow: '你可能把"被需要"当成了自我价值的来源。放下舵，你还知道自己是谁吗？',
+    relationship: '你是"最靠谱的那个人"，但伴侣可能会觉得你"太强了"，在你身边不知道该怎么贡献。',
+    growth: '试着练习"不掌舵"——下次聚餐不要你来选餐厅。观察一下当你放手的时候，世界是否真的会乱掉。',
+    quote: '"最强的领航者，知道什么时候该把船交给风。"',
+  },
+  observer: {
+    pattern: '你总是能感知到别人感知不到的——房间里的暗流、对话中的潜台词、表情后面的情绪。你像一台高敏摄影机，永远在记录，但很少出现在画面里。',
+    strength: '你拥有罕见的深度感知力和非侵入性的智慧。你的观察常常能在关键时刻提供别人没想到的视角。',
+    shadow: '你的观察位可能变成了藏身之处。久而久之，你可能变成了自己人生的观众——看得清所有人的戏，却不确定自己的角色是什么。',
+    relationship: '你是"最懂TA的那个人"，但你的沉默可能被误读为冷淡。你需要一个安全的空间，让你从观众席慢慢走到舞台上。',
+    growth: '下次观察到什么的时候，试着说出来。"我注意到你刚才皱了一下眉"——仅此一句，你就从观察者变成了参与者。',
+    quote: '"你已经看够了别人的故事，现在轮到你写自己的了。"',
+  },
+};
+
+const COMBOS = {
+  'wall+analyst':   { name: '理性壁垒型', desc: '你用逻辑来理解世界，用距离来保护自己。安全但可能孤独。' },
+  'analyst+wall':   { name: '理性壁垒型', desc: '你用逻辑来理解世界，用距离来保护自己。安全但可能孤独。' },
+  'warmer+helm':    { name: '温柔领袖型', desc: '你用关心来连接，用行动来推进。被信任，但记得也允许自己休息。' },
+  'helm+warmer':    { name: '温柔领袖型', desc: '你用关心来连接，用行动来推进。被信任，但记得也允许自己休息。' },
+  'chall+disrupt':  { name: '真相风暴型', desc: '你追求真实，也不怕打破虚假秩序。最有变革力量，但留一些和平也不错。' },
+  'disrupt+chall':  { name: '真相风暴型', desc: '你追求真实，也不怕打破虚假秩序。最有变革力量，但留一些和平也不错。' },
+  'hiker+creator':  { name: '自由创造型', desc: '你在移动中获得灵感，在创造中找到自由。但"留下来"本身可能就是你最大的创作。' },
+  'creator+hiker':  { name: '自由创造型', desc: '你在移动中获得灵感，在创造中找到自由。但"留下来"本身可能就是你最大的创作。' },
+  'observer+analyst': { name: '深度洞察型', desc: '你看得比别人多，想得比别人深。最安静的智者——但世界也需要听到你的声音。' },
+  'analyst+observer': { name: '深度洞察型', desc: '你看得比别人多，想得比别人深。最安静的智者——但世界也需要听到你的声音。' },
+  'creator+warmer': { name: '疗愈艺术家型', desc: '你用创造来连接，用作品来温暖。天生适合助人，但别忘了你自己也需要被帮助。' },
+  'warmer+creator': { name: '疗愈艺术家型', desc: '你用创造来连接，用作品来温暖。天生适合助人，但别忘了你自己也需要被帮助。' },
+  'helm+wall':      { name: '铁壁统帅型', desc: '你有方向感也有边界感。最"靠谱"的人——但"靠谱"的代价可能是从不允许自己脆弱。' },
+  'wall+helm':      { name: '铁壁统帅型', desc: '你有方向感也有边界感。最"靠谱"的人——但"靠谱"的代价可能是从不允许自己脆弱。' },
+  'disrupt+hiker':  { name: '不安分的风型', desc: '你在打破中寻找，在移动中觉醒。最自由也最孤独——"停下来"是一种更深的自由。' },
+  'hiker+disrupt':  { name: '不安分的风型', desc: '你在打破中寻找，在移动中觉醒。最自由也最孤独——"停下来"是一种更深的自由。' },
+  'chall+warmer':   { name: '温柔战士型', desc: '你既追求真相又在意感受，能把最尖锐的话用最温柔的方式说出来。你是调解者，连接冲突双方的桥梁。' },
+  'warmer+chall':   { name: '温柔战士型', desc: '你既追求真相又在意感受，能把最尖锐的话用最温柔的方式说出来。你是调解者，连接冲突双方的桥梁。' },
+};
+
+const QUESTIONS = [
+  // Q1: wall, hiker, warmer, analyst
+  { title: '周末被放鸽子',
+    desc: '你期待了一整周的周末约会，朋友在出发前一小时突然取消了。你的第一反应是——',
+    opts: [
+      { text: '心里记下这笔，以后少约不靠谱的人', arc: 'wall' },
+      { text: '正好，一个人去个没去过的地方探索一下', arc: 'hiker' },
+      { text: '马上联系其他朋友，看谁有空一起出来', arc: 'warmer' },
+      { text: '想想TA最近是不是遇到什么事了，取消可能有原因', arc: 'analyst' },
+    ]},
+  // Q2: chall, helm, disrupt, observer
+  { title: '方案被当众质疑',
+    desc: '团队会议上，你精心准备的方案被一个同事当众挑战，所有人都看着你。你会——',
+    opts: [
+      { text: '直接回应，用数据证明自己的方案更优', arc: 'chall' },
+      { text: '接过话题，提议综合两个方案的优点往前推进', arc: 'helm' },
+      { text: '反问对方："那你的方案能解决这个核心问题吗？"', arc: 'disrupt' },
+      { text: '安静听完所有人的意见，会后再找机会沟通', arc: 'observer' },
+    ]},
+  // Q3: creator, wall, chall, warmer
+  { title: '好友借钱',
+    desc: '关系很好的朋友向你借一笔不小的钱，语气有些为难。你的第一反应是——',
+    opts: [
+      { text: '帮TA想想其他解决办法，比如分期或找其他渠道', arc: 'creator' },
+      { text: '找个委婉的理由拒绝，金钱和友情不能混在一起', arc: 'wall' },
+      { text: '直接问清楚：借多少、为什么、什么时候还', arc: 'chall' },
+      { text: '二话不说就答应了，朋友有难当然要帮', arc: 'warmer' },
+    ]},
+  // Q4: hiker, analyst, helm, disrupt
+  { title: '公司突然变动',
+    desc: '公司宣布组织架构大调整，你的岗位可能受到影响，同事们人心惶惶。你会——',
+    opts: [
+      { text: '开始看外面的机会，给自己留条后路', arc: 'hiker' },
+      { text: '冷静分析形势，列出所有可能的情况和应对方案', arc: 'analyst' },
+      { text: '主动找领导谈话，了解真实情况并争取有利位置', arc: 'helm' },
+      { text: '在小群里发些模棱两可的消息，试探大家的真实想法', arc: 'disrupt' },
+    ]},
+  // Q5: observer, creator, wall, chall
+  { title: '陌生社交场',
+    desc: '你参加一个活动，发现自己是唯一一个谁都不认识的人，其他人已经聊得很热络。你会——',
+    opts: [
+      { text: '找个不太显眼的位置待着，先观察这群人的互动', arc: 'observer' },
+      { text: '想个有趣的开场白或话题来打破僵局', arc: 'creator' },
+      { text: '礼貌地待一会儿，找个合适的时机提前离开', arc: 'wall' },
+      { text: '直接走向看起来最有趣的那个人，大方自我介绍', arc: 'chall' },
+    ]},
+  // Q6: warmer, hiker, analyst, helm
+  { title: '亲密的人情绪低落',
+    desc: '你的伴侣/最好的朋友明显情绪不对，但问了两次都说"没事"。你会——',
+    opts: [
+      { text: '不再追问，默默陪在TA身边，做些TA平时喜欢的事', arc: 'warmer' },
+      { text: '给TA空间，自己先去做点别的，等TA准备好了再说', arc: 'hiker' },
+      { text: '根据最近发生的事情推测可能的原因', arc: 'analyst' },
+      { text: '认真地说："你可以不说，但我需要知道你是不是安全的"', arc: 'helm' },
+    ]},
+  // Q7: disrupt, observer, creator, wall
+  { title: '项目出了错',
+    desc: '你负责的项目出了一个明显的失误，目前只有你自己发现了。你会——',
+    opts: [
+      { text: '在团队复盘时把问题抛出来，看看大家什么反应', arc: 'disrupt' },
+      { text: '先不声张，默默观察事态会怎么发展', arc: 'observer' },
+      { text: '立刻设计一个补救方案，把危机变成展示能力的机会', arc: 'creator' },
+      { text: '先控制信息范围，只告诉需要知道的人', arc: 'wall' },
+    ]},
+  // Q8: chall, warmer, hiker, analyst
+  { title: '朋友激烈辩论',
+    desc: '一群朋友在激烈讨论一个你有很强烈看法的话题，气氛越来越紧张。你会——',
+    opts: [
+      { text: '加入辩论，把自己的观点摆出来据理力争', arc: 'chall' },
+      { text: '先缓和气氛，找到大家都能接受的共同点', arc: 'warmer' },
+      { text: '笑着说"你们继续"，然后低头刷手机', arc: 'hiker' },
+      { text: '等大家说完，条理清晰地总结各方观点', arc: 'analyst' },
+    ]},
+  // Q9: helm, disrupt, observer, creator
+  { title: '超出职责的任务',
+    desc: '领导安排了一项明显超出你职责范围的工作，但语气不容拒绝。你会——',
+    opts: [
+      { text: '接下任务，但明确提出需要相应的资源和权限', arc: 'helm' },
+      { text: '表面答应，但按自己的节奏和方式来做', arc: 'disrupt' },
+      { text: '不置可否，先看看其他同事怎么应对类似情况', arc: 'observer' },
+      { text: '把这个任务重新设计成一个展示自己能力的项目', arc: 'creator' },
+    ]},
+  // Q10: wall, chall, warmer, hiker
+  { title: '搬到新城市',
+    desc: '因为工作搬到一个完全陌生的城市，需要重新建立社交圈。你的策略是——',
+    opts: [
+      { text: '保持原来的几个核心朋友就够了，不刻意社交', arc: 'wall' },
+      { text: '加入感兴趣的社群，真诚地做自己，吸引同频的人', arc: 'chall' },
+      { text: '主动组织聚会活动，成为新圈子里的连接者', arc: 'warmer' },
+      { text: '先到处探索这个城市，有意思的人自然会遇到', arc: 'hiker' },
+    ]},
+  // Q11: analyst, helm, disrupt, observer
+  { title: '被好友背后议论',
+    desc: '你偶然发现一个关系不错的朋友在背后说了你的坏话。你的第一反应是——',
+    opts: [
+      { text: '回想最近的互动细节，分析TA为什么要这样做', arc: 'analyst' },
+      { text: '直接约TA出来，把话摊开说清楚', arc: 'helm' },
+      { text: '在朋友圈发一条意味深长的动态，不点名但谁看谁懂', arc: 'disrupt' },
+      { text: '假装不知道，但内心暗暗保持距离', arc: 'observer' },
+    ]},
+  // Q12: creator, wall, chall, warmer
+  { title: '家庭聚会被催问',
+    desc: '过年家庭聚会，七大姑八大姨开始催婚/催生/催考公。你会——',
+    opts: [
+      { text: '幽默化解，把话题巧妙地转到其他有趣的事上', arc: 'creator' },
+      { text: '微笑点头敷衍过去，心里决定下次找借口不来了', arc: 'wall' },
+      { text: '认真地说："我对自己的人生有自己的规划和节奏"', arc: 'chall' },
+      { text: '反过来关心长辈的身体和生活，让他们变成被关注的人', arc: 'warmer' },
+    ]},
+  // Q13: hiker, analyst, helm, disrupt
+  { title: '课程远超水平',
+    desc: '你兴致勃勃报名了一个课程，上了两节课发现远超自己的能力。你会——',
+    opts: [
+      { text: '考虑退课去找一个更适合自己水平的', arc: 'hiker' },
+      { text: '仔细分析课程结构，制定一个补课赶上的计划', arc: 'analyst' },
+      { text: '主动找老师或助教沟通，争取额外的辅导和资源', arc: 'helm' },
+      { text: '故意在课上问些"基础问题"，看谁会主动来帮你', arc: 'disrupt' },
+    ]},
+  // Q14: observer, creator, wall, chall
+  { title: '深夜莫名空虚',
+    desc: '深夜一个人，工作和社交都停下了，突然袭来一阵莫名的空虚感。你会——',
+    opts: [
+      { text: '就这样静静坐着，让自己完整地感受这种情绪', arc: 'observer' },
+      { text: '打开电脑或笔记本，写点东西或开始做一个小项目', arc: 'creator' },
+      { text: '关掉手机早点睡，明天又是新的一天，不想那么多', arc: 'wall' },
+      { text: '认真地问自己：这种空虚到底是从哪里来的？', arc: 'chall' },
+    ]},
+  // Q15: warmer, hiker, analyst, helm
+  { title: '合作风格不合',
+    desc: '你和搭档的工作风格完全不同——你喜欢提前计划，TA喜欢临场发挥。你会——',
+    opts: [
+      { text: '尽量配合TA的节奏，合作顺利比什么都重要', arc: 'warmer' },
+      { text: '各做各的部分，减少不必要的交集就好', arc: 'hiker' },
+      { text: '分析两种风格各自的优劣，提出一个折中方案', arc: 'analyst' },
+      { text: '主动约谈，建立清晰的分工和时间节点', arc: 'helm' },
+    ]},
+  // Q16: disrupt, observer, creator, wall
+  { title: '意外获得一周假期',
+    desc: '你突然多出一周完全自由的假期，没有任何安排。你最可能——',
+    opts: [
+      { text: '做些平时不敢做的事，打破一下日常的套路', arc: 'disrupt' },
+      { text: '什么都不安排，看心情随意度过，享受无计划的自由', arc: 'observer' },
+      { text: '终于有时间了，动手做一个一直想做但没空做的项目', arc: 'creator' },
+      { text: '关掉所有社交媒体和消息通知，好好享受独处的安静', arc: 'wall' },
+    ]},
+  // Q17: chall, warmer, hiker, analyst
+  { title: '创意被别人抢先',
+    desc: '你酝酿很久的一个创意，突然发现有人已经做出来了，而且做得还不错。你的反应是——',
+    opts: [
+      { text: '仔细研究对方的版本，看自己能不能做得更好更深', arc: 'chall' },
+      { text: '真心为对方高兴，好的想法被实现了就是好事', arc: 'warmer' },
+      { text: '翻篇了，已经开始想下一个新点子', arc: 'hiker' },
+      { text: '冷静分析自己为什么没有先做出来，哪个环节卡住了', arc: 'analyst' },
+    ]},
+  // Q18: helm, disrupt, observer, creator
+  { title: '不太熟的人突然倾诉',
+    desc: '一个不太熟的同事/朋友突然向你倾诉了非常私密的事情，你有点措手不及。你会——',
+    opts: [
+      { text: '给出你觉得最合适的建议和方向', arc: 'helm' },
+      { text: '温和地问TA："是什么让你选择告诉我这些？"', arc: 'disrupt' },
+      { text: '安静听着，不做评判，让TA把话说完', arc: 'observer' },
+      { text: '分享一段自己类似的经历来回应TA', arc: 'creator' },
+    ]},
+];
+
+// ══════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════
+let currentQ = 0;
+const answers = new Array(QUESTIONS.length).fill(null);
+const responseTimes = new Array(QUESTIONS.length).fill(null); // silent timer (ms)
+let questionStartTime = 0; // when current question was shown
+
+// ══════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz() {
+  currentQ = 0;
+  answers.fill(null);
+  responseTimes.fill(null);
+  showPage('page-question');
+  renderQuestion();
+  updateProgress();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  document.getElementById('qNum').textContent = currentQ + 1;
+  document.getElementById('qMeta').textContent = `第 ${currentQ + 1} 题，共 ${QUESTIONS.length} 题`;
+  document.getElementById('qTitle').textContent = q.title;
+  document.getElementById('qDesc').textContent = q.desc;
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (answers[currentQ] === i ? ' selected' : '');
+    div.innerHTML = `
+      <div class="option-label">${labels[i]}</div>
+      <div class="option-text">${opt.text}</div>
+    `;
+    div.onclick = () => selectOption(i);
+    container.appendChild(div);
+  });
+
+  document.getElementById('btnPrev').disabled = currentQ === 0;
+  document.getElementById('btnNext').disabled = answers[currentQ] === null;
+
+  // Last question: change button text
+  const btnNext = document.getElementById('btnNext');
+  if (currentQ === QUESTIONS.length - 1) {
+    btnNext.textContent = '查看结果 →';
+  } else {
+    btnNext.textContent = '下一题 →';
+  }
+
+  // Start silent timer for this question
+  questionStartTime = Date.now();
+}
+
+function selectOption(idx) {
+  // Record response time silently (only first selection per question)
+  if (answers[currentQ] === null && questionStartTime > 0) {
+    responseTimes[currentQ] = Date.now() - questionStartTime;
+  }
+  answers[currentQ] = idx;
+  document.querySelectorAll('.option').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('btnNext').disabled = false;
+
+  // Auto-advance after short delay
+  setTimeout(() => {
+    if (answers[currentQ] !== null) nextQ();
+  }, 320);
+}
+
+function nextQ() {
+  if (answers[currentQ] === null) return;
+  if (currentQ < QUESTIONS.length - 1) {
+    currentQ++;
+    renderQuestion();
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    // All done
+    showCalculating();
+  }
+}
+
+function prevQ() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function updateProgress() {
+  const pct = ((currentQ) / QUESTIONS.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// SCORING
+// ══════════════════════════════════════════════════════════════════════════
+function showCalculating() {
+  showPage('page-calculating');
+  document.getElementById('progressFill').style.width = '100%';
+  setTimeout(() => {
+    const scores = calcScores();
+    renderResult(scores);
+    showPage('page-result');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 1600);
+}
+
+function calcScores() {
+  const scores = {};
+  Object.keys(ARCHETYPES).forEach(k => scores[k] = 0);
+
+  // Time-based weight: fast answers (<5s) get 1.2x, slow answers (>20s) get 0.8x
+  QUESTIONS.forEach((q, qi) => {
+    const ans = answers[qi];
+    if (ans !== null) {
+      const ms = responseTimes[qi] || 10000;
+      let weight = 1.0;
+      if (ms < 5000) weight = 1.2;       // instinctive
+      else if (ms < 10000) weight = 1.0;  // normal
+      else if (ms < 20000) weight = 0.9;  // considered
+      else weight = 0.8;                   // deliberate
+      scores[q.opts[ans].arc] += weight;
+    }
+  });
+  return scores;
+}
+
+// Utility: get instinct ratio for result page insight
+function getInstinctRatio() {
+  const fast = responseTimes.filter(t => t !== null && t < 5000).length;
+  return Math.round((fast / QUESTIONS.length) * 100);
+}
+
+function renderResult(scores) {
+  // Sort archetypes by score
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const primaryKey = sorted[0][0];
+  const secondaryKey = sorted[1][0];
+  const primary = ARCHETYPES[primaryKey];
+  const secondary = ARCHETYPES[secondaryKey];
+  const profile = PROFILES[primaryKey];
+  const max = 8 * 1.2; // max possible weighted score (all fast answers)
+
+  // Combo lookup
+  const comboKey = `${primaryKey}+${secondaryKey}`;
+  const combo = COMBOS[comboKey] || null;
+
+  const page = document.getElementById('page-result');
+  page.innerHTML = `
+    <div class="result-header">
+      <div class="result-badge">测评完成 · 你的原型出现了</div>
+      <div style="font-size:13px;color:var(--subtext);margin-top:8px">点亮人生 · 心灵九相系统</div>
+    </div>
+
+    <!-- Primary archetype card -->
+    <div class="archetype-card" style="background:${primary.bg};border-color:${primary.color};color:${primary.color}">
+      <div style="font-size:11px;letter-spacing:3px;opacity:0.6;margin-bottom:8px">主要原型 PRIMARY</div>
+      <div class="archetype-name">${primary.name}</div>
+      <div class="archetype-sub">${primary.sub}</div>
+      <div class="archetype-tag">#${primary.tag}</div>
+
+      <div class="profile-section">
+        <div class="profile-label">你的模式</div>
+        <div class="profile-text" style="color:var(--text)">${profile.pattern}</div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-label">你的超能力</div>
+        <div class="profile-text" style="color:var(--text)">${profile.strength}</div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-label">你的盲区</div>
+        <div class="profile-text" style="color:var(--text)">${profile.shadow}</div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-label">在关系中</div>
+        <div class="profile-text" style="color:var(--text)">${profile.relationship}</div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-label">成长方向</div>
+        <div class="profile-text" style="color:var(--text)">${profile.growth}</div>
+      </div>
+      <div class="quote-block">${profile.quote}</div>
+    </div>
+
+    <!-- Secondary -->
+    <div class="secondary-card">
+      <div class="label">次要原型 SECONDARY</div>
+      <div class="secondary-name" style="color:${secondary.color}">${secondary.name} <span style="font-size:14px;opacity:0.6">${secondary.sub}</span></div>
+      <div class="secondary-desc">你的"候补反应"——当主要原型失效或耗尽时，${secondary.name}会出现。它补充了你的心理资源，也带来了它自己的智慧。</div>
+    </div>
+
+    ${combo ? `
+    <div class="combo-card">
+      <div class="combo-title">你的原型组合</div>
+      <div class="combo-name">${primary.name} + ${secondary.name} = ${combo.name}</div>
+      <div class="combo-desc">${combo.desc}</div>
+    </div>` : `
+    <div class="combo-card">
+      <div class="combo-title">你的原型组合</div>
+      <div class="combo-name">${primary.name} + ${secondary.name}</div>
+      <div class="combo-desc">这是一个独特的组合，两种模式之间的张力正是你成长的核心动力所在。</div>
+    </div>`}
+
+    <!-- Score chart -->
+    <div class="scores-section">
+      <div class="scores-title">九相分布图</div>
+      ${sorted.map(([key, score]) => {
+        const a = ARCHETYPES[key];
+        const pct = (score / max) * 100;
+        return `
+        <div class="score-row">
+          <div class="score-name">${a.name}</div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width:${pct}%;background:${a.color}"></div>
+          </div>
+          <div class="score-count" style="color:${a.color}">${score.toFixed(1)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- Instinct ratio insight -->
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:24px;text-align:center">
+      <div style="font-size:12px;color:var(--subtext);margin-bottom:4px">直觉指数</div>
+      <div style="font-size:28px;font-weight:800;color:var(--purple)">${getInstinctRatio()}%</div>
+      <div style="font-size:12px;color:var(--subtext);margin-top:4px">${getInstinctRatio() >= 60 ? '你的大部分选择来自直觉反应，结果可信度较高' : getInstinctRatio() >= 35 ? '你在部分题目上有所思考，结果反映了直觉与理性的混合' : '你在很多题上深思熟虑，结果可能更多反映"期待中的自己"'}</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="result-footer">
+      <div style="background:linear-gradient(135deg,#FAF7FF,#EDE7F6);border:1px solid #D8C8F0;border-radius:16px;padding:24px;margin-bottom:24px;text-align:left">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);letter-spacing:2px;margin-bottom:8px">想要深入探索？</div>
+        <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">心灵九相工作坊</div>
+        <div style="font-size:14px;color:var(--subtext);line-height:1.7">在安全的团体空间中，通过角色扮演和情境模拟，亲身体验你的原型模式如何运作——你将在"保护性虚构"中安全地看见自己。</div>
+      </div>
+      <button class="btn-restart" onclick="startQuiz()">重新测评</button>
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #eee">
+        <p style="font-size:10px;color:#bbb">© 2026 点亮人生 · 心灵九相系统 · 版权所有，未经授权禁止复制转载，违者必究</p>
+      </div>
+    </div>
+  `;
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.score-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          bar.style.transition = 'width 0.8s ease';
+          bar.style.width = w;
+        });
+      });
+    });
+  }, 100);
+}
+</script>
+</body>
+</html>
