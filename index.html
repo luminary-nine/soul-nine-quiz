@@ -1172,6 +1172,17 @@ function renderResult(scores) {
 
     <!-- Footer -->
     <div class="result-footer">
+      <!-- Data collection form -->
+      <div id="submitSection" style="background:white;border:2px solid var(--purple);border-radius:16px;padding:24px;margin-bottom:24px;text-align:center">
+        <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px">获取你的完整原型解读PDF</div>
+        <div style="font-size:13px;color:var(--subtext);margin-bottom:16px;line-height:1.6">留下你的微信号，我们会发送专属于你的原型组合深度分析</div>
+        <div style="display:flex;gap:8px;max-width:400px;margin:0 auto">
+          <input type="text" id="userContact" placeholder="你的微信号" style="flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none;font-family:inherit" onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='var(--border)'"/>
+          <button onclick="submitResult()" style="background:linear-gradient(135deg,var(--purple),var(--navy));color:white;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity 0.2s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">提交</button>
+        </div>
+        <div id="submitMsg" style="margin-top:10px;font-size:12px;display:none"></div>
+      </div>
+
       <div style="background:linear-gradient(135deg,#FAF7FF,#EDE7F6);border:1px solid #D8C8F0;border-radius:16px;padding:24px;margin-bottom:24px;text-align:left">
         <div style="font-size:13px;font-weight:700;color:var(--purple);letter-spacing:2px;margin-bottom:8px">想要深入探索？</div>
         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">心灵九相工作坊</div>
@@ -1197,6 +1208,78 @@ function renderResult(scores) {
       });
     });
   }, 100);
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// DATA SUBMISSION (via FormSubmit → email)
+// ══════════════════════════════════════════════════════════════════════════
+function submitResult() {
+  const contact = document.getElementById('userContact').value.trim();
+  const msgEl = document.getElementById('submitMsg');
+
+  if (!contact) {
+    msgEl.style.display = 'block';
+    msgEl.style.color = '#C0392B';
+    msgEl.textContent = '请填写你的微信号';
+    return;
+  }
+
+  // Gather result data
+  const scores = calcScores();
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const primaryKey = sorted[0][0];
+  const secondaryKey = sorted[1][0];
+  const primary = ARCHETYPES[primaryKey];
+  const secondary = ARCHETYPES[secondaryKey];
+  const instinct = getInstinctRatio();
+
+  // All scores as text
+  const allScores = sorted.map(([k, s]) => `${ARCHETYPES[k].name}:${s.toFixed(1)}`).join(' / ');
+
+  // Response time details
+  const avgTime = responseTimes.filter(t => t !== null).reduce((a, b) => a + b, 0) / QUESTIONS.length;
+
+  const payload = {
+    _subject: `心灵九相测评结果 | ${primary.name} + ${secondary.name}`,
+    _template: 'table',
+    _captcha: 'false',
+    '微信号': contact,
+    '主原型': `${primary.name} (${primary.sub})`,
+    '次原型': `${secondary.name} (${secondary.sub})`,
+    '直觉指数': `${instinct}%`,
+    '平均答题时间': `${(avgTime / 1000).toFixed(1)}秒`,
+    '全部得分': allScores,
+    '测试时间': new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
+  };
+
+  // Show loading
+  msgEl.style.display = 'block';
+  msgEl.style.color = 'var(--subtext)';
+  msgEl.textContent = '提交中...';
+
+  fetch('https://formsubmit.co/ajax/yixiafeng1314@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('submitSection').innerHTML = `
+        <div style="padding:12px 0">
+          <div style="font-size:24px;margin-bottom:8px">&#10003;</div>
+          <div style="font-size:15px;font-weight:700;color:var(--green)">提交成功！</div>
+          <div style="font-size:13px;color:var(--subtext);margin-top:6px">我们会通过微信联系你，发送专属原型解读</div>
+        </div>`;
+    } else {
+      msgEl.style.color = '#C0392B';
+      msgEl.textContent = '提交失败，请稍后重试';
+    }
+  })
+  .catch(() => {
+    msgEl.style.color = '#C0392B';
+    msgEl.textContent = '网络错误，请稍后重试';
+  });
 }
 </script>
 </body>
