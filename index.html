@@ -1189,7 +1189,22 @@ function renderResult(scores) {
         <div style="font-size:14px;color:var(--subtext);line-height:1.7">在安全的团体空间中，通过角色扮演和情境模拟，亲身体验你的原型模式如何运作——你将在"保护性虚构"中安全地看见自己。</div>
       </div>
       <button class="btn-restart" onclick="startQuiz()">重新测评</button>
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #eee">
+
+      <!-- 联系我们 -->
+      <div style="margin-top:36px;padding:28px 24px;background:linear-gradient(135deg,#f8f7ff,#ede7f6);border-radius:16px;text-align:center;border:1px solid #d8cef0">
+        <p style="font-size:18px;font-weight:700;color:#1A3C6B;margin-bottom:6px">想深入探索你的原型？</p>
+        <p style="font-size:14px;color:#555;margin-bottom:20px;line-height:1.6">加入心灵九相线上工作坊，在真实互动中体验你的原型如何运作</p>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <img src="./wechat-qr.png" alt="点亮人生客服微信二维码" style="width:160px;height:160px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12)" onerror="this.style.display='none';document.getElementById('qr-fallback').style.display='block'"/>
+          <div id="qr-fallback" style="display:none;width:160px;height:160px;background:#eee;border-radius:12px;display:flex;align-items:center;justify-content:center">
+            <span style="font-size:12px;color:#999">二维码加载中</span>
+          </div>
+          <p style="font-size:13px;color:#6B3FA0;font-weight:600">扫码添加客服微信</p>
+          <p style="font-size:12px;color:#888">回复「九相」了解工作坊详情</p>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid #eee">
         <p style="font-size:10px;color:#bbb">© 2026 点亮人生 · 心灵九相系统 · 版权所有，未经授权禁止复制转载，违者必究</p>
       </div>
     </div>
